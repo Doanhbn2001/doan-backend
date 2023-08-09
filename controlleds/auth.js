@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const Type = require('../models/type');
@@ -7,33 +6,74 @@ const Plant = require('../models/plants');
 const URL = require('../constant').URL;
 const IMG_DEFAULT = require('../constant').IMG_DEFAULT;
 
+exports.signUp = (req, res, next) => {
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (user) {
+        return res.json({ error: true, mess: 'Email đã tồn tại' });
+      }
+      return bcrypt
+        .hash(req.body.password, 12)
+        .then((hasshedPassword) => {
+          const user = new User({
+            email: req.body.email,
+            password: hasshedPassword,
+            plant_notes: { plant_notes: [] },
+            isAdmin: false,
+          });
+          return user.save();
+        })
+        .then(() => {
+          res.json({ erorr: false, mess: 'Đăng ký tài khoản thành công' });
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 exports.signIn = (req, res, next) => {
-  //   bcrypt
-  //     .hash(req.body.password, 12)
-  //     .then((hasshedPassword) => {
-  //       const user = new User({
-  //         email: req.body.email,
-  //         password: hasshedPassword,
-  //       });
-  //       return user.save();
-  //     })
-  //     .then(() => {
-  //       res.json({ ok: true });
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
   User.findOne({ email: req.body.email })
     .then((admin) => {
       if (!admin) {
         return res.json({ errorEmail: true });
       } else {
+        if (!admin.isAdmin) {
+          return res.json({ errorEmail: true });
+        }
         bcrypt.compare(req.body.password, admin.password).then((doMatch) => {
           if (!doMatch) {
             return res.json({ errorPassword: true });
           } else {
             req.session.adminId = String(admin._id);
             return res.json({ admin: admin });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.logout = (req, res, next) => {
+  req.session.destroy((err) => {});
+  res.clearCookie('connect.sid');
+  res.json({ error: false });
+};
+
+exports.signInUser = (req, res, next) => {
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (!user) {
+        return res.json({ errorEmail: true });
+      } else {
+        bcrypt.compare(req.body.password, user.password).then((doMatch) => {
+          if (!doMatch) {
+            return res.json({ errorPassword: true });
+          } else {
+            req.session.adminId = String(user._id);
+            return res.json({ user: user });
           }
         });
       }
@@ -76,8 +116,9 @@ exports.deleteType = (req, res, next) => {
       if (!type) {
         return res.json({ error: true, mess: 'Lỗi server!! Vui lòng thử lại' });
       }
-      if (type.plants.length !== 0)
+      if (type.plants.length !== 0) {
         return res.json({ error: true, mess: 'Không thể xóa họ thực vật này' });
+      }
       res.json({ error: false, mess: 'Xóa họ thực vật thành công!!' });
       return Type.deleteOne({ _id: id });
     })
@@ -99,6 +140,8 @@ exports.addPlant = (req, res, next) => {
     aperture_p,
     exine_p,
     structure_p,
+    longitude,
+    latitude,
   } = req.body;
   let img1 = '';
   let img2 = '';
@@ -123,6 +166,8 @@ exports.addPlant = (req, res, next) => {
         aperture_p: aperture_p,
         exine_p: exine_p,
         structure_p: structure_p,
+        longitude: longitude,
+        atitude: latitude,
       });
       type.plants.push(plant._id);
       type.save();
@@ -176,6 +221,8 @@ exports.editPlant = (req, res, next) => {
     exine_p,
     structure_p,
     id,
+    longitude,
+    latitude,
   } = req.body;
   let img1 = '';
   let img2 = '';
@@ -208,9 +255,12 @@ exports.editPlant = (req, res, next) => {
               plant.aperture_p = aperture_p;
               plant.exine_p = exine_p;
               plant.structure_p = structure_p;
+              plant.longitude = longitude;
+              plant.latitude = latitude;
               plant.img1 = img1;
               plant.img2 = img2;
               type.plants.push(id);
+              type.save();
               return plant.save();
             })
             .then((plant) => {
@@ -220,5 +270,79 @@ exports.editPlant = (req, res, next) => {
         .catch((error) => {
           return res.json({ error: true, mess: 'Loi server' });
         });
+    });
+};
+
+exports.getData = (req, res, next) => {
+  const id = req.body.id;
+  User.findById(id)
+    .populate('plant_notes.plant_notes.plant')
+    // // .execPopulate()
+    .then((user) => {
+      if (!user)
+        return res.json({
+          error: true,
+          mess: 'Co loi xay ra! Lam on dang nhap lai',
+        });
+      return res.json({ error: false, data: user.plant_notes });
+    })
+    .catch((err) => {
+      return res.json({
+        error: true,
+        mess: 'Co loi xay ra! Lam on dang nhap lai',
+      });
+    });
+};
+
+exports.addNote = (req, res, next) => {
+  const id = req.body.idUser;
+  const plantId = req.body.idPlant;
+  const note = req.body.note;
+  Plant.findById(plantId)
+    .then((plant) => {
+      if (!plant)
+        return res.json({
+          error: true,
+          mess: 'Co loi xay ra. Vui long dang nhap lai',
+        });
+      User.findById(id)
+        .then((user) => {
+          return user.addToNote(plant._id, note);
+        })
+        .then(() => {
+          return res.json({ error: false });
+        });
+    })
+    .catch((err) => {
+      return res.json({
+        error: true,
+        mess: 'Co loi xay ra. Vui long dang nhap lai',
+      });
+    });
+};
+
+exports.deleteNote = (req, res, next) => {
+  const id = req.body.idUser;
+  const plantId = req.body.idPlant;
+  Plant.findById(plantId)
+    .then((plant) => {
+      if (!plant)
+        return res.json({
+          error: true,
+          mess: 'Co loi xay ra. Vui long dang nhap lai',
+        });
+      User.findById(id)
+        .then((user) => {
+          return user.deleteNote(plant._id);
+        })
+        .then(() => {
+          return res.json({ error: false });
+        });
+    })
+    .catch((err) => {
+      return res.json({
+        error: true,
+        mess: 'Co loi xay ra. Vui long dang nhap lai',
+      });
     });
 };

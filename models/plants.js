@@ -54,6 +54,14 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
+  longitude: {
+    type: String,
+    require: true,
+  },
+  latitude: {
+    type: String,
+    require: true,
+  },
 });
 
 module.exports = mongoose.model('Plant', userSchema);
