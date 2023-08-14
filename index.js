@@ -20,9 +20,9 @@ app.set('proxy', 1);
 app.use(
   cors({
     origin: [
-      'https://elegant-cendol-6bc893.netlify.app',
       'https://b349-2405-4802-1cb2-f640-5c54-2f62-9a5f-1de9.ngrok-free.app',
       'https://64da8882e629ed02990c005b--lucky-biscotti-e4c9e6.netlify.app',
+      'https://64da917a929af40a1e8f9f24--gleeful-dragon-a115ea.netlify.app',
       'http://localhost:3000',
     ],
 

@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 
 const authController = require('../controlleds/auth');
+const is_Admin = require('../middleware/isAdmin');
+const isAdmin = require('../middleware/isAdmin');
 
 router.post('/signup', authController.signUp);
 
@@ -12,9 +14,9 @@ router.get('/logout', authController.logout);
 
 router.post('/user-signin', authController.signInUser);
 
-router.post('/add-type', authController.addType);
+router.post('/add-type', isAdmin, authController.addType);
 
-router.post('/delete-type', authController.deleteType);
+router.post('/delete-type', isAdmin, authController.deleteType);
 
 router.post('/add-plant', authController.addPlant);
 
