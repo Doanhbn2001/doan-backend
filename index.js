@@ -18,6 +18,7 @@ app.use(
   cors({
     origin: [
       'https://64d9f19b2b3e79243ac3ca41--lucky-biscotti-e4c9e6.netlify.app',
+      'https://b349-2405-4802-1cb2-f640-5c54-2f62-9a5f-1de9.ngrok-free.app',
       'http://localhost:3000',
       'http://localhost:3001',
     ],
