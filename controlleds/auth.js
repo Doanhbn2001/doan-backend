@@ -58,8 +58,8 @@ exports.signIn = (req, res, next) => {
 
 exports.logout = (req, res, next) => {
   req.session.destroy((err) => {});
-  res.clearCookie('connect.sid');
-  res.json({ error: false });
+  // res.clearCookie('connect.sid');
+  return res.json({ error: false });
 };
 
 exports.signInUser = (req, res, next) => {
