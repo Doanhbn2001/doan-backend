@@ -13,7 +13,8 @@ const MONGODB_URI =
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(cors());
+app.set('trust proxy', 1);
+
 app.use(
   cors({
     // origin: '*',
@@ -25,11 +26,9 @@ app.use(
     ],
     methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
-
-app.set('trust proxy', 1);
 
 const store = new MongoDbStore({
   uri: MONGODB_URI,
