@@ -15,20 +15,24 @@ const MONGODB_URI =
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.set('proxy', 1);
+app.set('proxy', 1);
 
-// app.use(
-//   cors({
-//     origin: '*',
+app.use(
+  cors({
+    origin: [
+      // 'https://elegant-cendol-6bc893.netlify.app',
+      'https://b349-2405-4802-1cb2-f640-5c54-2f62-9a5f-1de9.ngrok-free.app',
+      'http://localhost:3000',
+    ],
 
-//     // methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
-//     methods: 'POST,PUT,GET,OPTIONS,HEAD, DELETE',
-//     credentials: true,
-//   })
-// );
+    // methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
+    methods: 'POST,PUT,GET,OPTIONS,HEAD, DELETE',
+    credentials: true,
+  })
+);
 
-app.use(cors());
-app.options('*', cors());
+// app.use(cors());
+// app.options('*', cors());
 
 const store = new MongoDbStore({
   uri: MONGODB_URI,
