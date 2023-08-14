@@ -3,7 +3,7 @@ const Types = require('../models/type');
 const { ObjectId } = require('mongodb');
 
 exports.getAllPlants = (req, res, next) => {
-  const search = req.query.search;
+  const search = req.query.search ? req.query.search : '';
   Plants.find({})
     .populate('type')
     .then((plants) => {
@@ -58,10 +58,11 @@ exports.getDetail = (req, res, next) => {
 
 exports.getTypes = (req, res, next) => {
   const page = req.query.page ? Number(req.query.page) : 0;
-  const search = req.query.search;
+  const search = req.query.search ? req.query.search : '';
   Types.find({})
     .populate('plants')
     .then((types) => {
+      // console.log(types);
       if (search !== '') {
         types = types.filter((t) => {
           const name = t.name.toLowerCase();
@@ -73,11 +74,12 @@ exports.getTypes = (req, res, next) => {
       if (page > 0) {
         types = types.slice((page - 1) * 12, page * 12);
       }
-
+      console.log(types);
       return res.json({ data: types, length: length });
     })
     .catch((err) => {
-      res.json({ error: true, data: [] });
+      console.log('fff');
+      return res.json({ error: true, data: [] });
     });
 };
 

@@ -13,7 +13,15 @@ const MONGODB_URI =
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'https://64d9eeddd2d5de1d4ed9823e--lucky-biscotti-e4c9e6.netlify.app',
+      'http://localhost:3000',
+      'http://localhost:30001',
+    ],
+  })
+);
 
 const store = new MongoDbStore({
   uri: MONGODB_URI,
