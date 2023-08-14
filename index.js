@@ -4,6 +4,8 @@ const cors = require('cors');
 const mongooose = require('mongoose');
 const path = require('path');
 const app = express();
+app.enable('trust proxy');
+
 const multer = require('multer');
 const session = require('express-session');
 const MongoDbStore = require('connect-mongodb-session')(session);
@@ -13,16 +15,20 @@ const MONGODB_URI =
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+// app.set('proxy', 1);
 
-app.use(
-  cors({
-    origin: '*',
+// app.use(
+//   cors({
+//     origin: '*',
 
-    // methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
-    methods: 'POST,PUT,GET,OPTIONS,HEAD, DELETE',
-    credentials: true,
-  })
-);
+//     // methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
+//     methods: 'POST,PUT,GET,OPTIONS,HEAD, DELETE',
+//     credentials: true,
+//   })
+// );
+
+app.use(cors());
+app.options('*', cors());
 
 const store = new MongoDbStore({
   uri: MONGODB_URI,
