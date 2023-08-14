@@ -25,8 +25,8 @@ app.use(
       'http://localhost:3000',
     ],
 
-    // methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
-    methods: 'POST,PUT,GET,OPTIONS,HEAD, DELETE',
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
+    // methods: 'POST,PUT,GET,OPTIONS,HEAD, DELETE',
     credentials: true,
   })
 );
