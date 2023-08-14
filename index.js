@@ -13,7 +13,7 @@ const MONGODB_URI =
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 // app.use(cors());
 app.use(
   cors({
