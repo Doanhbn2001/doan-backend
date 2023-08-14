@@ -14,19 +14,18 @@ const MONGODB_URI =
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('trust proxy', 1);
-// app.use(cors());
+app.use(cors());
 app.use(
   cors({
-    origin: '*',
-    // origin: [
-    //   'https://64d9f19b2b3e79243ac3ca41--lucky-biscotti-e4c9e6.netlify.app',
-    //   'https://b349-2405-4802-1cb2-f640-5c54-2f62-9a5f-1de9.ngrok-free.app',
-    //   'http://localhost:3000',
-    //   'http://localhost:3001',
-    // ],
-    // methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
-    // credentials: true,
-    // allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: [
+      'https://64d9f19b2b3e79243ac3ca41--lucky-biscotti-e4c9e6.netlify.app',
+      'https://b349-2405-4802-1cb2-f640-5c54-2f62-9a5f-1de9.ngrok-free.app',
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ],
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
