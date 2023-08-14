@@ -17,9 +17,9 @@ app.set('trust proxy', 1);
 app.use(
   cors({
     origin: [
-      'https://64d9eeddd2d5de1d4ed9823e--lucky-biscotti-e4c9e6.netlify.app',
+      'https://64d9f19b2b3e79243ac3ca41--lucky-biscotti-e4c9e6.netlify.app',
       'http://localhost:3000',
-      'http://localhost:30001',
+      'http://localhost:3001',
     ],
     methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
     credentials: true,

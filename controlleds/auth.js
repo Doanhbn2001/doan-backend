@@ -35,6 +35,7 @@ exports.signUp = (req, res, next) => {
 exports.signIn = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((admin) => {
+      console.log(admin);
       if (!admin) {
         return res.json({ errorEmail: true });
       } else {
