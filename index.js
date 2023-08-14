@@ -13,6 +13,7 @@ const MONGODB_URI =
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.set('trust proxy', 1);
 app.use(
   cors({
     origin: [
@@ -20,6 +21,8 @@ app.use(
       'http://localhost:3000',
       'http://localhost:30001',
     ],
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
+    credentials: true,
   })
 );
 
