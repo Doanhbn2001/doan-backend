@@ -10,7 +10,7 @@ router.post('/upload-image', plantsControlleds.uploadImage);
 
 router.post('/get-detail', plantsControlleds.getDetail);
 
-router.get('/get-all-types', plantsControlleds.getTypes);
+router.post('/get-all-types', plantsControlleds.getTypes); //
 
 router.post('/add-to-type', plantsControlleds.addToType);
 
